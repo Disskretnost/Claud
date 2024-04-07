@@ -5,7 +5,20 @@ const User = sequelize.define('user', {
     id: {type: DataTypes.INTEGER, primaryKey: true, autoIncrement: true},
     email: {type: DataTypes.STRING, unique: true},
     password: {type: DataTypes.STRING},
-    username: {type: DataTypes.STRING, unique: true},
-    created_at: {type: DataTypes.DATE},
-    updated_at: {type: DataTypes.DATE},
+    username: {type: DataTypes.STRING},
+    role: {type: DataTypes.STRING, defaultValue: 'user'}, 
 });
+
+const File = sequelize.define('file', {
+    id: {type: DataTypes.INTEGER, primaryKey: true, autoIncrement: true},
+    userId: {type: DataTypes.INTEGER, references: {model: 'user', key: 'id'}},
+    name: {type: DataTypes.STRING},
+    path: {type: DataTypes.STRING},
+    size: {type: DataTypes.INTEGER},
+    contentType: {type: DataTypes.STRING},
+});
+
+User.hasMany(File, {foreignKey: 'userId'});
+File.belongsTo(User, {foreignKey: 'userId'});
+
+module.exports = { User, File };
