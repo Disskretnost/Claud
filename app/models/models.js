@@ -11,7 +11,7 @@ const User = sequelize.define('user', {
 
 const File = sequelize.define('file', {
     id: {type: DataTypes.INTEGER, primaryKey: true, autoIncrement: true},
-    userId: {type: DataTypes.INTEGER, references: {model: 'user', key: 'id'}},
+    userId: {type: DataTypes.INTEGER, references: {model: 'users', key: 'id'}}, // Исправлено здесь
     name: {type: DataTypes.STRING},
     path: {type: DataTypes.STRING},
     size: {type: DataTypes.INTEGER},

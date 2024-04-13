@@ -57,16 +57,21 @@ class UserController {
             }
         });
     }
+
+    async getAllUsers(req, res) {
+        try {
+            // Получаем всех пользователей
+            const users = await User.findAll();
+
+            // Возвращаем список пользователей
+            return res.status(200).json(users);
+        } catch (err) {
+            // Обработка ошибок
+            return res.status(500).json({ message: err.message });
+        }
+    }
 }
 
 module.exports = new UserController();
 
 
-
-    /**
-     * 
-     *    async check(req, res, next) {
-        const token = generateJwtToken(req.user.id, req.user.email);
-        return res.json({token});
-    }
-     */
