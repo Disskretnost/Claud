@@ -14,6 +14,7 @@ class UserController {
             return res.status(400).json({ message: "Username, password, and email are required" });
         }
         const existingUser = await User.findOne({ where: { email: email } });
+        console.log(existingUser)
         if (existingUser) {
             return res.status(400).json({ message: "Email already in use" }); 
         }

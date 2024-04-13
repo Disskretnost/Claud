@@ -23,10 +23,11 @@ const storage = multer.diskStorage({
             cb(error);
         }
     },
-    filename: function(req, file, cb) {
-        // Используем оригинальное имя файла с добавлением временной метки для уникальности
-        cb(null, Date.now() + '-' + file.originalname);
-    }
+    filename: function (req, file, cb) {
+        // Используйте ID пользователя и оригинальное имя файла.
+        const userId = req.user.id; // Предполагается, что ID пользователя доступен через req.user.id
+        cb(null, `${userId}-${file.originalname}`);
+      }
 });
 
 
@@ -36,6 +37,7 @@ router.get('/files', authMiddleware, FileController.getAllFiles);
 
 router.post('/uploadFile', authMiddleware, upload.single('file'), FileController.uploadFile);
 router.delete('/delete/:id', authMiddleware, FileController.deleteFile);
-
+//router.get('/download/:id',authMiddleware, FileController.downloadFile);
+router.get('/download/:id', authMiddleware, FileController.downloadFile);
 
 module.exports = router;

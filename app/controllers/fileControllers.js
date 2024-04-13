@@ -1,4 +1,7 @@
+const { Console } = require('console');
 const { File } = require('./../models/models'); // Предполагается, что модель File экспортируется из файла models.js
+const fs = require('fs');
+const path = require('path');
 
 class FileController {
     async getAllFiles(req, res) {
@@ -35,24 +38,46 @@ class FileController {
             if (!file) {
                 return res.status(404).json({ message: "Файл не найден" });
             }
+            const userId = req.user.id; // Предполагается, что ID пользователя доступен через req.user.id
+            const filePath = path.join(__dirname, '..', `uploads/${userId}/${userId}-${file.name}`);
+            await fs.promises.unlink(filePath);
+            await File.destroy({ where: { id: fileId } });
+            res.status(200).json({ message: "Файл успешно удален" });
+        } catch (err) {
+            // Обработка ошибок, связанных с базой данных или другими исключениями
+            console.error(err); // Логирование ошибки для отладки
+            res.status(500).json({ message: "Ошибка сервера", error: err.message });
+        }
+    }
+
+    async downloadFile(req, res) {
+        try {
+            const fileId = req.params.id; // Получаем ID файла из параметров запроса
+            console.log(fileId)
+            const file = await File.findByPk(fileId); // Ищем файл по ID
     
-            // Удаление файла из файловой системы
-            const fs = require('fs');
-            const path = require('path');
-            const filePath = path.join(__dirname, '../uploads', file.userId.toString(), file.name); // Убедитесь, что userId преобразован в строку
+            if (!file) {
+                return res.status(404).json({ message: "Файл не найден" });
+            }
     
-            fs.unlink(filePath, async (err) => {
+            const userId = req.user.id; // Предполагается, что ID пользователя доступен через req.user.id
+            const filePath = path.join(__dirname, '..', `uploads/${userId}/${userId}-${file.name}`);
+    
+            // Проверяем, существует ли файл
+            if (!fs.existsSync(filePath)) {
+                return res.status(404).json({ message: "Файл не найден" });
+            }
+    
+            // Отправляем файл пользователю
+            res.download(filePath, file.name, (err) => {
                 if (err) {
-                    return res.status(500).json({ message: "Ошибка при удалении файла из файловой системы" });
+                    console.error(err);
+                    res.status(500).json({ message: "Ошибка при скачивании файла" });
                 }
-    
-                // Удаление информации о файле из базы данных
-                await File.destroy({ where: { id: fileId } }); // Используем destroy для удаления записи
-    
-                res.status(200).json({ message: "Файл успешно удален" });
             });
         } catch (err) {
-            res.status(500).json({ message: "Ошибка сервера" });
+            console.error(err); // Логирование ошибки для отладки
+            res.status(500).json({ message: "Ошибка сервера", error: err.message });
         }
     }
     
