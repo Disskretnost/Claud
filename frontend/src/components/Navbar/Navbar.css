@@ -1,0 +1,30 @@
+.navbar {
+    background-color: white; /* Фоновый цвет Navbar */
+    padding: 10px 20px; /* Отступы сверху и снизу */
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* Тень для 3D эффекта */
+}
+
+.navbar-content {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+    max-width: 1400px; /* Максимальная ширина контента */
+    margin: 0 auto; /* Центрирование контента */
+}
+
+.navbar h1 {
+    color:  #009579; /* Цвет текста */
+    margin: 0; /* Убираем отступ сверху */
+}
+
+.navbar button {
+    background-color: #009579; /* Фоновый цвет кнопки */
+    color: white; /* Цвет текста кнопки */
+    border: none; /* Убираем рамку */
+    padding: 10px 20px; /* Отступы внутри кнопки */
+    border-radius: 5px; /* Скругление углов */
+    cursor: pointer; /* Изменение курсора на указатель при наведении */
+    transition: background-color 0.3s ease; /* Плавный переход цвета фона */
+}
+

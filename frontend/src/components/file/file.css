@@ -1,0 +1,33 @@
+.file-card {
+    background-color: #fff;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    padding: 0;
+    text-align: center;
+    border-bottom: 2px solid black;
+    font-size: 14px;
+}
+
+.file-info {
+    display: grid;
+    grid-template-columns: 70% 4% 16% 10%;
+    padding: 10px;
+    text-align: left; /* Для выравнивания текста внутри ячеек влево */
+    position: relative; /* Установка позиции контейнера как относительной */
+}
+
+.file-info > :nth-child(2),
+.file-info > :nth-child(3) {
+    justify-self: center; /* Выравнивание второго и третьего элементов по центру */
+}
+
+.file-info > :last-child {
+    position: absolute; /* Абсолютное позиционирование последнего элемента */
+    right: 4%; /* Размещение последнего элемента справа */
+    top: 50%; /* Расположение элемента вверху контейнера на 50% высоты */
+    transform: translateY(-50%); /* Смещение элемента назад на 50% его собственной высоты, чтобы центрировать его по вертикали */
+}
+
+.icon__wrapper{
+    display: flex;
+    gap: 5px;
+}

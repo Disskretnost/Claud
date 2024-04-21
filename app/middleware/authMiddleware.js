@@ -2,7 +2,7 @@ const jwt = require('jsonwebtoken');
 
 module.exports = function(req, res, next) {
     if (req.method === 'OPTIONS') {
-        next(); // Если вы хотите пропустить OPTIONS запросы
+        next(); 
     }
 
     try {
@@ -13,11 +13,10 @@ module.exports = function(req, res, next) {
 
         const decoded = jwt.verify(token, process.env.SECRET_KEY);
         req.user = decoded;
-        req.userId = decoded.id; // Извлекаем id пользователя из декодированного токена
-        next(); // Передача управления следующему middleware
+        req.userId = decoded.id; 
+        next(); 
     } catch (err) {
         res.status(401).json({message: "Пользователь не авторизован"});
-        // Если вы хотите обработать ошибку в другом месте, вызовите next() с аргументом err
-        // next(err);
+
     }
 };
