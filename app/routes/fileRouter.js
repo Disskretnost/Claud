@@ -9,11 +9,8 @@ const fs = require('fs');
 // Настройка Multer для создания уникальной папки для каждого пользователя
 const storage = multer.diskStorage({
     destination: function(req, file, cb) {
-        // Преобразуем userId в строку
         const userId = String(req.user.id);
-        const dir = path.join(__dirname, './../uploads', userId);
-
-        // Создаем папку, если она еще не существует
+        const dir = path.join(__dirname, './../../uploads', userId);
         try {
             if (!fs.existsSync(dir)){
                 fs.mkdirSync(dir, { recursive: true });
@@ -24,11 +21,12 @@ const storage = multer.diskStorage({
         }
     },
     filename: function (req, file, cb) {
-        // Используйте ID пользователя и оригинальное имя файла.
-        const userId = req.user.id; // Предполагается, что ID пользователя доступен через req.user.id
-        cb(null, `${userId}-${file.originalname}`);
-      }
+        const userId = req.user.id;
+        const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1E9);
+        cb(null, `${userId}-${file.originalname}-${uniqueSuffix}`);
+    }
 });
+
 
 
 const upload = multer({ storage: storage });

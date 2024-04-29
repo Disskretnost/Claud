@@ -17,18 +17,21 @@ class FileController {
 
     async uploadFile(req, res) {
         try {
+            console.log(req)
             const file = await File.create({
                 userId: req.user.id, // Используем userId из req.user
-                name: req.file.originalname,
+                name: req.file.filename, // Используем уникальное имя файла
                 path: req.file.path,
                 size: req.file.size,
-                contentType: req.file.mimetype
+                contentType: req.file.mimetype,
+                originalName: req.file.originalname // Добавлено оригинальное имя файла
             });
             res.json(file);
         } catch (err) {
             res.status(500).json({ message: err.message });
         }
     }
+    
     
     async deleteFile(req, res) {
         try {
@@ -39,21 +42,21 @@ class FileController {
                 return res.status(404).json({ message: "Файл не найден" });
             }
             const userId = req.user.id; // Предполагается, что ID пользователя доступен через req.user.id
-            const filePath = path.join(__dirname, '..', `uploads/${userId}/${userId}-${file.name}`);
+            // Используем уникальное имя файла для определения пути к файлу на диске
+            const filePath = path.join(__dirname, '../..', `uploads/${userId}/${file.name}`);
             await fs.promises.unlink(filePath);
             await File.destroy({ where: { id: fileId } });
             res.status(200).json({ message: "Файл успешно удален" });
         } catch (err) {
-            // Обработка ошибок, связанных с базой данных или другими исключениями
             console.error(err); // Логирование ошибки для отладки
             res.status(500).json({ message: "Ошибка сервера", error: err.message });
         }
     }
+    
 
     async downloadFile(req, res) {
         try {
             const fileId = req.params.id; // Получаем ID файла из параметров запроса
-            console.log(fileId)
             const file = await File.findByPk(fileId); // Ищем файл по ID
     
             if (!file) {
@@ -61,7 +64,9 @@ class FileController {
             }
     
             const userId = req.user.id; // Предполагается, что ID пользователя доступен через req.user.id
-            const filePath = path.join(__dirname, '..', `uploads/${userId}/${userId}-${file.name}`);
+            // Используем уникальное имя файла для определения пути к файлу на диске
+            // Убедитесь, что file.name содержит только имя файла
+            const filePath = path.join(__dirname, '../..', `uploads/${userId}/${file.name}`);
     
             // Проверяем, существует ли файл
             if (!fs.existsSync(filePath)) {
@@ -69,17 +74,22 @@ class FileController {
             }
     
             // Отправляем файл пользователю
-            res.download(filePath, file.name, (err) => {
+            // Отправляем файл пользователю
+            console.log(file.originalName)
+            res.download(filePath, file.originalName, (err) => {
                 if (err) {
                     console.error(err);
                     res.status(500).json({ message: "Ошибка при скачивании файла" });
                 }
             });
+
         } catch (err) {
             console.error(err); // Логирование ошибки для отладки
             res.status(500).json({ message: "Ошибка сервера", error: err.message });
         }
     }
+    
+    
     
 }
 

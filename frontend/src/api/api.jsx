@@ -11,7 +11,7 @@ export const checkToken = async () => {
     myHeaders.append('Authorization', `Bearer ${token}`);
 
     try {
-        const response = await fetch('http://localhost:8080/api/user/checkToken', {
+        const response = await fetch('/api/user/checkToken', {
             method: 'GET',
             headers: myHeaders,
         });
@@ -22,20 +22,19 @@ export const checkToken = async () => {
     }
 };
 
-// fileService.js
+
 export const loadFiles = async () => {
     const token = localStorage.getItem('token');
     if (!token) {
         console.error('Токен не найден');
         return false;
     }
-
     const myHeaders = new Headers();
     myHeaders.append('Content-Type', 'application/json');
     myHeaders.append('Authorization', `Bearer ${token}`);
 
     try {
-        const response = await fetch('http://localhost:8080/api/file/files', {
+        const response = await fetch('/api/file/files', {
             method: 'GET',
             headers: myHeaders,
         });
@@ -49,3 +48,4 @@ export const loadFiles = async () => {
         return false;
     }
 };
+

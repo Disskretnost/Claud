@@ -9,15 +9,21 @@
 
 .file-info {
     display: grid;
-    grid-template-columns: 70% 4% 16% 10%;
+    grid-template-columns: 5% 65% 4% 16% 6%;
     padding: 10px;
     text-align: left; /* Для выравнивания текста внутри ячеек влево */
     position: relative; /* Установка позиции контейнера как относительной */
 }
 
-.file-info > :nth-child(2),
-.file-info > :nth-child(3) {
-    justify-self: center; /* Выравнивание второго и третьего элементов по центру */
+
+.file-info > :nth-child(3),
+.file-info > :nth-child(4) {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+.file-info > :nth-child(2) {
+    justify-self: left; /* Выравнивание второго и третьего элементов по центру */
 }
 
 .file-info > :last-child {
@@ -31,3 +37,4 @@
     display: flex;
     gap: 5px;
 }
+

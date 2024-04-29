@@ -11,12 +11,14 @@ const User = sequelize.define('user', {
 
 const File = sequelize.define('file', {
     id: {type: DataTypes.INTEGER, primaryKey: true, autoIncrement: true},
-    userId: {type: DataTypes.INTEGER, references: {model: 'users', key: 'id'}}, // Исправлено здесь
+    userId: {type: DataTypes.INTEGER, references: {model: 'users', key: 'id'}},
     name: {type: DataTypes.STRING},
     path: {type: DataTypes.STRING},
     size: {type: DataTypes.INTEGER},
     contentType: {type: DataTypes.STRING},
+    originalName: {type: DataTypes.STRING}, // Добавлено оригинальное имя файла
 });
+
 
 User.hasMany(File, {foreignKey: 'userId'});
 File.belongsTo(User, {foreignKey: 'userId'});

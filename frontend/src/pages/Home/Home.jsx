@@ -1,9 +1,8 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useRef, useCallback } from 'react';
 import FileCard from './../../components/file/file';
 import './Home.css';
 import Navbar from '../../components/Navbar/Navbar';
-import { checkToken } from '../../api/api';
-import { loadFiles } from '../../api/api';
+import { checkToken, loadFiles } from '../../api/api';
 
 const HomePage = () => {
     const [files, setFiles] = useState([]);
@@ -11,20 +10,20 @@ const HomePage = () => {
     const [selectedFile, setSelectedFile] = useState(null);
     const fileInputRef = useRef();
 
-    const handleLogout = () => {
+    const handleLogout = useCallback(() => {
         localStorage.removeItem('token');
         window.location.href = '/login';
-    };
+    }, []);
 
-    const handleFileChange = (event) => {
+    const handleFileChange = useCallback((event) => {
         setSelectedFile(event.target.files[0]);
-    };
+    }, []);
 
-    const handleClick = () => {
+    const handleClick = useCallback(() => {
         fileInputRef.current.click();
-    };
+    }, []);
 
-    const handleUpload = async () => {
+    const handleUpload = useCallback(async () => {
         if (!selectedFile) {
             alert('Пожалуйста, выберите файл для загрузки');
             return;
@@ -35,7 +34,7 @@ const HomePage = () => {
 
         try {
             const token = localStorage.getItem('token');
-            const response = await fetch('http://localhost:8080/api/file/uploadFile', {
+            const response = await fetch('/api/file/uploadFile', {
                 method: 'POST',
                 body: formData,
                 headers: {
@@ -48,11 +47,9 @@ const HomePage = () => {
             }
 
             const data = await response.json();
-            console.log(data);
             alert('Файл успешно загружен');
             setSelectedFile(null);
 
-            // После успешной загрузки файла, загрузить обновленный список файлов
             const updatedFiles = await loadFiles();
             if (updatedFiles) {
                 setFiles(updatedFiles);
@@ -61,7 +58,14 @@ const HomePage = () => {
             console.error('Ошибка при загрузке файла:', error);
             alert('Ошибка при загрузке файла');
         }
-    };
+    }, [selectedFile]);
+
+    const handleFileDelete = useCallback(async () => {
+        const updatedFiles = await loadFiles();
+        if (updatedFiles) {
+            setFiles(updatedFiles);
+        }
+    }, []);
 
     useEffect(() => {
         const authenticateAndLoadFiles = async () => {
@@ -84,7 +88,7 @@ const HomePage = () => {
         if (selectedFile) {
             handleUpload();
         }
-    }, [selectedFile]);
+    }, [selectedFile, handleUpload]);
 
     if (loading) {
         return <div>Загрузка...</div>;
@@ -110,7 +114,7 @@ const HomePage = () => {
                     <div>size</div>
                 </div>
                 {files.map(file => (
-                    <FileCard key={file.id} file={file} />
+                    <FileCard key={file.id} file={file} onDelete={handleFileDelete} />
                 ))}
             </div>
         </div>

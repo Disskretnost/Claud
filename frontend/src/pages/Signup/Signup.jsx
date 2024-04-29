@@ -22,7 +22,7 @@ const LoginPage = () => {
         };
 
         try {
-            const response = await fetch('http://localhost:8080/api/user/registration', {
+            const response = await fetch('/api/user/registration', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -37,10 +37,6 @@ const LoginPage = () => {
             const data = await response.json();
             console.log(data);
 
-            // Предполагается, что сервер возвращает токен или другой способ идентификации пользователя
-            // Здесь вы можете сохранить этот токен в localStorage или в контексте приложения
-
-            // Перенаправляем пользователя на главную страницу
             navigate('/login');
         } catch (error) {
             console.error('Ошибка:', error);

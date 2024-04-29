@@ -7,9 +7,10 @@ const cors  = require('cors');
 const router = require('./routes/mainRouter.js');
 //const errorHandler = require('./middleware/ErrorHandlingMiddleware.js')
 const bodyParser = require("body-parser");
+const path = require('path');
 
 const app = express();
-
+app.use('/uploads', express.static(path.join(__dirname, './../uploads')));
 app.use(bodyParser.json({limit: "30mb", extended: true}));
 app.use(bodyParser.urlencoded({limit: "30mb", extended: true}));
 app.use(cors());
