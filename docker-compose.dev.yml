@@ -9,24 +9,24 @@ services:
     working_dir: /opt/server
     volumes:
       - ./app:/opt/server
-      - ./static:/opt/static
+      - ./uploads:/opt/uploads
     env_file:
       - .env
     expose:
       - '4200'
     depends_on:
       - db
+    networks:
+      - app_network
 
   db:
-    image: postgres:12-alpine
+    image: postgres:alpine
     environment:
-      - POSTGRES_USER=${DB_USER}
-      - POSTGRES_PASSWORD=${DB_PASSWORD}
-    volumes:
-      - ./postgres:/var/lib/postgresql/data
+      - POSTGRES_PASSWORD=admin
     expose:
-      - '5432'
-    restart: always
+      - '7654:5432'
+    networks:
+      - app_network
 
   nginx:
     container_name: proxy_nginx
@@ -41,6 +41,8 @@ services:
       - ./nginx:/etc/nginx/conf.d
       - ./static:/var/www/static
     restart: always
+    networks:
+      - app_network
 
   pgadmin:
     container_name: pgadmin
@@ -53,3 +55,9 @@ services:
     expose:
       - '80'
     restart: always
+    networks:
+      - app_network
+      
+networks:
+  app_network:
+    driver: bridge

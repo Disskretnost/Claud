@@ -1,8 +1,8 @@
 const ApiError = require('../errors/ApiError.js');
 const {User} = require('../models/models.js');
-const bcrypt = require('bcrypt');
-const jwt = require('jsonwebtoken'); 
 
+const jwt = require('jsonwebtoken'); 
+const argon2 = require('argon2');
 const generateJwtToken = (id, email) => {
     return jwt.sign({id, email}, process.env.SECRET_KEY, {expiresIn: '24h'})
 }
@@ -10,15 +10,14 @@ const generateJwtToken = (id, email) => {
 class UserController {
     async registration(req, res) {
         const {email, password, username, role} = req.body;
-        if (!username || !password || !email) {
+        if (!username ||!password ||!email) {
             return res.status(400).json({ message: "Username, password, and email are required" });
         }
         const existingUser = await User.findOne({ where: { email: email } });
-        console.log(existingUser)
         if (existingUser) {
             return res.status(400).json({ message: "Email already in use" }); 
         }
-        const hashedPassword = await bcrypt.hash(password, 10);
+        const hashedPassword = await argon2.hash(password);
         const user = await User.create({
             username: username,
             email: email,
@@ -37,14 +36,15 @@ class UserController {
         });
     }
     
+    
     async login(req, res) {
         const {email, password} = req.body;
         const user = await User.findOne({ where: { email: email } });
         if (!user){
             return res.status(404).json( {message: "Пользователь не найден" });
         }
-        let comparePassword = bcrypt.compareSync(password, user.password);
-        if (!comparePassword){
+        const verify = await argon2.verify(user.password, password);
+        if (!verify){
             return res.status(404).json( {message: "Пароли не совпадают" });
         }
         const token = generateJwtToken(user.id, user.email);
@@ -58,6 +58,7 @@ class UserController {
             }
         });
     }
+    
 
     async getAllUsers(req, res) {
         try {

@@ -5,8 +5,12 @@ ENV TZ Europe/Moscow
 ENV NODE_PATH /opt/server/node_modules
 
 WORKDIR /opt/server/
+COPY /*.json ./
 
-CMD [ "node" ]
+RUN npm install
+COPY . .
+
+#CMD [ "node", "index.js" ]
 
 # production
 FROM node:17.5.0-alpine AS production
