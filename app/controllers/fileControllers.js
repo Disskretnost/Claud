@@ -17,14 +17,14 @@ class FileController {
 
     async uploadFile(req, res) {
         try {
-            console.log(req)
+            const decodedOriginalName = decodeURIComponent(req.file.originalname);
             const file = await File.create({
                 userId: req.user.id, // Используем userId из req.user
                 name: req.file.filename, // Используем уникальное имя файла
                 path: req.file.path,
                 size: req.file.size,
                 contentType: req.file.mimetype,
-                originalName: req.file.originalname // Добавлено оригинальное имя файла
+                originalName: decodedOriginalName // Используем декодированное оригинальное имя файла
             });
             res.json(file);
         } catch (err) {

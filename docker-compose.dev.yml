@@ -57,7 +57,20 @@ services:
     restart: always
     networks:
       - app_network
-      
+
+  react:
+    image: node:alpine
+    working_dir: /app
+    volumes:
+      - ./frontend:/app
+    command: npm start
+    ports:
+      - '3000:3000'
+    depends_on:
+      - app
+    networks:
+      - app_network
+
 networks:
   app_network:
     driver: bridge

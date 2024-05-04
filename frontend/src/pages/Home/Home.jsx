@@ -28,10 +28,13 @@ const HomePage = () => {
             alert('Пожалуйста, выберите файл для загрузки');
             return;
         }
-
+    
+        // Кодирование имени файла
+        const encodedFileName = encodeURIComponent(selectedFile.name);
+    
         const formData = new FormData();
-        formData.append('file', selectedFile, selectedFile.name);
-
+        formData.append('file', selectedFile, encodedFileName); // Используем закодированное имя файла
+    
         try {
             const token = localStorage.getItem('token');
             const response = await fetch('/api/file/uploadFile', {
@@ -41,15 +44,15 @@ const HomePage = () => {
                     'Authorization': `Bearer ${token}`
                 }
             });
-
+    
             if (!response.ok) {
                 throw new Error('Ошибка при загрузке файла');
             }
-
+    
             const data = await response.json();
             alert('Файл успешно загружен');
             setSelectedFile(null);
-
+    
             const updatedFiles = await loadFiles();
             if (updatedFiles) {
                 setFiles(updatedFiles);
@@ -59,6 +62,7 @@ const HomePage = () => {
             alert('Ошибка при загрузке файла');
         }
     }, [selectedFile]);
+    
 
     const handleFileDelete = useCallback(async () => {
         const updatedFiles = await loadFiles();
