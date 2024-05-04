@@ -22,9 +22,9 @@ services:
   db:
     image: postgres:alpine
     environment:
-      - POSTGRES_PASSWORD=admin
+      - POSTGRES_PASSWORD=123
     expose:
-      - '7654:5432'
+      - '5432'
     networks:
       - app_network
 

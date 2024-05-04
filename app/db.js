@@ -3,15 +3,14 @@ require('dotenv').config({ path: './../.env' });
 
 
 
-// Создание нового экземпляра Sequelize
 const sequelize = new Sequelize(
-    'Claud', 
-    'postgres', 
-    '123',
+    process.env.DB_NAME, 
+    process.env.DB_USER, 
+    process.env.DB_PASSWORD,
     {
         dialect: 'postgres',
-        host: 'localhost', 
-        port: 5432, 
+        host: process.env.DB_HOST, 
+        port: process.env.DB_PORT, // Убедитесь, что порт преобразуется в число
     }
 );
 
