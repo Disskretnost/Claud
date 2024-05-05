@@ -6,8 +6,8 @@ const Navbar = ({ onLogout }) => {
     return (
         <nav className="navbar"> {/* Применяем класс .navbar */}
             <div className="navbar-content"> {/* Добавляем контейнер для содержимого */}
-                <h1>Мой сайт</h1>
-                <button onClick={onLogout}>Выйти из аккаунта</button>
+                <h1>Claud Web</h1>
+                <button onClick={onLogout}>Log out</button>
             </div>
         </nav>
     );

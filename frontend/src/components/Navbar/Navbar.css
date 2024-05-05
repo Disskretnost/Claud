@@ -26,5 +26,6 @@
     border-radius: 5px; /* Скругление углов */
     cursor: pointer; /* Изменение курсора на указатель при наведении */
     transition: background-color 0.3s ease; /* Плавный переход цвета фона */
+    font-size: 15px;
 }
 
