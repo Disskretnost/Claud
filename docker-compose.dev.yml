@@ -40,6 +40,7 @@ services:
     volumes:
       - ./nginx:/etc/nginx/conf.d
       - ./static:/var/www/static
+      - /etc/letsencrypt:/etc/keys
     restart: always
     networks:
       - app_network
