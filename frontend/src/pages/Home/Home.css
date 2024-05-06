@@ -1,0 +1,48 @@
+
+
+/* Стили для контейнера с файлами */
+.files-list {
+    display: flex;
+    flex-direction: column;
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: 20px 20px;
+}
+
+/* Стили для FileCard */
+
+
+
+.file-header {
+    display: grid;
+    grid-template-columns: 64% 10% 16% 10%;
+    background-color: white;
+    margin-bottom: 15px;
+    padding: 10px;
+    border-radius: 10px;
+    align-items: center;
+    text-align: center;
+}
+
+.file-header > :first-child {
+    flex: 8; /* 8 parts of the available space */
+    text-align: left;
+}
+
+.file-header > :nth-child(n+2) {
+    flex: 1; /* 1 part of the available space */
+    text-align: center;
+
+}
+
+.Download{
+    background-color: white;
+
+    font-size: 18px;
+    font-weight: 600px;
+    margin-bottom: 20px;
+    padding: 7px;
+    border: 10%;
+    width: 120px;
+    border-radius: 12px;
+}
